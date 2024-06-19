@@ -1,0 +1,23 @@
+name: Security sam
+on:
+ workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: aws-actions/setup-sam@v1
+      - uses: fortify/github-action@v3
+      - uses: GitGuardian/ggshield/actions/iac@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: orcasecurity/shiftleft-container-image-action@v1
+      - uses: PaloAltoNetworks/prisma-cloud-scan@v1.5
+      - uses: veracode/veracode-uploadandscan-action@v2
+        with:
+            aws-access-key-id: "AKIA5WFDL3XZPQOBFGI2" #fake secret
+            aws-secret-access-key: "oujPoDlREMbJjzpM9nQobN+CHuslrPS8kXqkZDvU" #fake secret
+            aws-region: us-west-2
+      # sam build 
+      - run: sam build --use-container
